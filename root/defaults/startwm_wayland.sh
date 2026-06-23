@@ -10,6 +10,12 @@ if [ ! -f $HOME/Desktop/lm-studio.desktop ]; then
   chmod +x $HOME/Desktop/lms.desktop
 fi
 
+# Default configs
+if [ ! -f $HOME/.config/opencode/opencode.json ]; then
+  mkdir -p "$HOME/.config/opencode"
+  cp /defaults/opencode.json "$HOME/.config/opencode/"
+fi
+
 # Disable compositing and screen locking
 if [ ! -f $HOME/.config/kwinrc ]; then
   kwriteconfig6 --file $HOME/.config/kwinrc --group Compositing --key Enabled false

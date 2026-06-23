@@ -95,6 +95,7 @@ RUN \
   rm -rf \
     /config/.cache \
     /config/.cargo \
+    /config/.config \
     /config/.npm \
     /config/.openclaw \
     /tmp/* \
