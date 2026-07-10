@@ -2296,8 +2296,8 @@ pngjs                                                                           
 polkit                                                                               127-3                                                    alpm                            
 polkit-kde-agent                                                                     6.7.2-1                                                  alpm                            
 polkit-qt6                                                                           0.201.1-1                                                alpm                            
-poppler                                                                              26.06.0-1                                                alpm                            
-poppler-qt6                                                                          26.06.0-1                                                alpm                            
+poppler                                                                              26.07.0-1                                                alpm                            
+poppler-qt6                                                                          26.07.0-1                                                alpm                            
 popt                                                                                 1.19-2                                                   alpm                            
 portable-atomic                                                                      1.13.1                                                   rust-crate    (+1 duplicate)    
 portaudio                                                                            1:19.7.0-4                                               alpm                            
