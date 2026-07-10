@@ -30,7 +30,7 @@ NAME                                                                            
 @aws-sdk/credential-provider-process                                                 3.972.57                                                 npm                             
 @aws-sdk/credential-provider-sso                                                     3.973.1                                                  npm                             
 @aws-sdk/credential-provider-web-identity                                            3.972.63                                                 npm                             
-@aws-sdk/credential-providers                                                        3.1084.0                                                 npm                             
+@aws-sdk/credential-providers                                                        3.1085.0                                                 npm                             
 @aws-sdk/nested-clients                                                              3.997.31                                                 npm                             
 @aws-sdk/signature-v4-multi-region                                                   3.996.39                                                 npm                             
 @aws-sdk/token-providers                                                             3.1083.0                                                 npm                             
@@ -297,14 +297,14 @@ NAME                                                                            
 @simple-git/args-pathspec                                                            1.0.3                                                    npm                             
 @simple-git/argv-parser                                                              1.1.1                                                    npm                             
 @sinclair/typebox                                                                    0.34.41                                                  npm                             
-@smithy/core                                                                         3.29.2                                                   npm                             
-@smithy/credential-provider-imds                                                     4.4.7                                                    npm                             
-@smithy/eventstream-codec                                                            4.4.7                                                    npm                             
-@smithy/fetch-http-handler                                                           5.6.4                                                    npm                             
-@smithy/node-http-handler                                                            4.9.4                                                    npm                             
-@smithy/signature-v4                                                                 5.6.3                                                    npm                             
-@smithy/types                                                                        4.16.0                                                   npm                             
-@smithy/util-utf8                                                                    4.4.7                                                    npm                             
+@smithy/core                                                                         3.29.3                                                   npm                             
+@smithy/credential-provider-imds                                                     4.4.8                                                    npm                             
+@smithy/eventstream-codec                                                            4.4.8                                                    npm                             
+@smithy/fetch-http-handler                                                           5.6.5                                                    npm                             
+@smithy/node-http-handler                                                            4.9.5                                                    npm                             
+@smithy/signature-v4                                                                 5.6.4                                                    npm                             
+@smithy/types                                                                        4.16.1                                                   npm                             
+@smithy/util-utf8                                                                    4.4.8                                                    npm                             
 @so-ric/colorspace                                                                   1.1.6                                                    npm                             
 @stablelib/base64                                                                    1.0.1                                                    npm           (+1 duplicate)    
 @standard-schema/spec                                                                1.1.0                                                    npm           (+1 duplicate)    
