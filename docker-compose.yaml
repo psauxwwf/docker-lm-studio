@@ -1,15 +1,15 @@
 ---
 x-lm-studio: &lm-studio
-  image: ${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest}
+  image: ghcr.io/psauxwwf/docker-lm-studio:latest
   build:
     context: .
     dockerfile: Dockerfile
     platforms:
       - linux/amd64
     cache_from:
-      - type=registry,ref=${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest}
+      - type=registry,ref=ghcr.io/psauxwwf/docker-lm-studio:latest
     cache_to:
-      - type=registry,ref=${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest},mode=max
+      - type=registry,ref=ghcr.io/psauxwwf/docker-lm-studio:latest,mode=max
   container_name: lm-studio
   volumes:
     - ./config:/config

@@ -14,13 +14,13 @@ tasks:
     desc: Build the LM Studio image with registry cache.
     silent: true
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} build {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} build {{.SERVICE}}"
 
   build:no-cache:
     desc: Build the LM Studio image without cache.
     silent: true
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
 
   push:
     desc: Push the LM Studio image to GitHub Container Registry.
@@ -42,7 +42,7 @@ tasks:
     deps:
       - task: prepare
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
 
   up:nvidia:
     desc: Start the NVIDIA container.
@@ -50,7 +50,7 @@ tasks:
     deps:
       - task: prepare
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.nvidia.yaml up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} -f docker-compose.nvidia.yaml up -d {{.SERVICE}}"
 
   up:amd:
     desc: Start the AMD container.
@@ -58,7 +58,7 @@ tasks:
     deps:
       - task: prepare
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.amd.yaml up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} -f docker-compose.amd.yaml up -d {{.SERVICE}}"
 
   up:intel:
     desc: Start the Intel container.
@@ -66,7 +66,7 @@ tasks:
     deps:
       - task: prepare
     cmds:
-      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.intel.yaml up -d {{.SERVICE}}"
+      - "{{.DOCKER_COMPOSE}} -f docker-compose.intel.yaml up -d {{.SERVICE}}"
 
   down:
     desc: Stop and remove the LM Studio container.
