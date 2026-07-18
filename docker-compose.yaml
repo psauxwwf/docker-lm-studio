@@ -4,12 +4,14 @@ x-lm-studio: &lm-studio
   build:
     context: .
     dockerfile: Dockerfile
+    args:
+      VERSION: ${LM_STUDIO_VERSION:-local}
     platforms:
       - linux/amd64
     cache_from:
       - type=registry,ref=ghcr.io/psauxwwf/docker-lm-studio:latest
     cache_to:
-      - type=registry,ref=ghcr.io/psauxwwf/docker-lm-studio:latest,mode=max
+      - type=inline
   container_name: lm-studio
   volumes:
     - ./config:/config

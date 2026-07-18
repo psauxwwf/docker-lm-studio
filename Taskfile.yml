@@ -6,15 +6,61 @@ dotenv: [".env"]
 
 vars:
   DOCKER_COMPOSE: docker compose --project-directory . -f docker-compose.yaml
-  IMAGE: ghcr.io/psauxwwf/docker-lm-studio:latest
   SERVICE: lm-studio
 
+env:
+  COMPOSE_BAKE: true
+
 tasks:
-  build:
-    desc: Build the LM Studio image with registry cache.
+  image:build:
+    desc: Build the LM Studio Docker image.
     silent: true
     cmds:
       - "{{.DOCKER_COMPOSE}} build {{.SERVICE}}"
+
+  image:push:
+    desc: Build and push the LM Studio Docker image.
+    silent: true
+    cmds:
+      - task: image:build
+      - "{{.DOCKER_COMPOSE}} push {{.SERVICE}}"
+
+  image:pull:
+    desc: Pull the published LM Studio Docker image.
+    silent: true
+    cmds:
+      - "{{.DOCKER_COMPOSE}} pull {{.SERVICE}}"
+
+  image:publish:
+    desc: Build, tag, and push the LM Studio Docker image.
+    preconditions:
+      - sh: test -n "${LM_STUDIO_VERSION:-}"
+        msg: LM_STUDIO_VERSION is required, e.g. LM_STUDIO_VERSION=1.2.3 task image:publish
+    vars:
+      VERSION: "{{.LM_STUDIO_VERSION}}"
+    cmds:
+      - task: image:pull
+      - task: image:build
+      - docker image tag ghcr.io/psauxwwf/docker-lm-studio:latest ghcr.io/psauxwwf/docker-lm-studio:{{.VERSION}}
+      - docker push ghcr.io/psauxwwf/docker-lm-studio:latest
+      - docker push ghcr.io/psauxwwf/docker-lm-studio:{{.VERSION}}
+
+  release:create:
+    desc: Create a GitHub Release for the requested version.
+    preconditions:
+      - sh: test -n "${LM_STUDIO_VERSION:-}"
+        msg: LM_STUDIO_VERSION is required, e.g. LM_STUDIO_VERSION=1.2.3 task release:create
+    vars:
+      VERSION: "{{.LM_STUDIO_VERSION}}"
+    cmds:
+      - >-
+        gh release create "v{{.VERSION}}" --target "$(git rev-parse HEAD)" --title "v{{.VERSION}}" --generate-notes
+
+  build:
+    desc: Build the LM Studio Docker image.
+    silent: true
+    cmds:
+      - task: image:build
 
   build:no-cache:
     desc: Build the LM Studio image without cache.
@@ -26,7 +72,7 @@ tasks:
     desc: Push the LM Studio image to GitHub Container Registry.
     silent: true
     cmds:
-      - docker push {{.IMAGE}}
+      - task: image:push
 
   prepare:
     desc: Create local LM Studio data directories.
