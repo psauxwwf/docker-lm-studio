@@ -25,7 +25,8 @@ RUN \
     kwin-x11 \
     plasma-desktop \
     plasma-x11-session \
-    rsync && \
+    rsync \
+    vulkan-headers && \
   echo "**** install lm studio ****" && \
   cd /tmp && \
   mkdir /opt/lm-studio && \
