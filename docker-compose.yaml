@@ -7,9 +7,9 @@ x-lm-studio: &lm-studio
     platforms:
       - linux/amd64
     cache_from:
-      - type=registry,ref=${LM_STUDIO_CACHE_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:buildcache}
+      - type=registry,ref=${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest}
     cache_to:
-      - type=registry,ref=${LM_STUDIO_CACHE_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:buildcache},mode=max
+      - type=registry,ref=${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest},mode=max
   container_name: lm-studio
   volumes:
     - ./config:/config
