@@ -1,4 +1,0 @@
-#! /bin/bash
-
-cd /opt/lm-studio
-./lm-studio --no-sandbox "$@"

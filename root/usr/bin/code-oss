@@ -1,5 +1,0 @@
-#! /bin/bash
-
-BIN=/usr/bin/code-oss-real
-
-${BIN} --no-sandbox "$@"

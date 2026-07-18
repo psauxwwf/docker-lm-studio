@@ -1,12 +1,11 @@
 FROM ghcr.io/linuxserver/baseimage-selkies:arch
 
-# set version label
 ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+ARG VERSION=local
+
+LABEL build_version="Local LM Studio version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
-# title
 ENV TITLE="LM Studio" \
     PIXELFLUX_WAYLAND=true \
     NO_GAMEPAD=true
@@ -16,38 +15,14 @@ RUN \
   curl -o \
     /usr/share/selkies/www/icon.png \
     https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lmstudio-logo.png && \
-  echo "**** install packages ****" && \
+  echo "**** install runtime packages ****" && \
   pacman -Sy --noconfirm --needed \
-    ansible \
-    argon2 \
-    cargo \
-    chromium \
-    cmake \
-    code \
-    cuda \
-    discover \
-    dolphin \
-    git \
-    kate \
     kde-cli-tools \
-    kdialog \
     konsole \
     kwin-x11 \
-    mariadb \
-    nano \
-    nodejs \
-    npm \
-    opentofu \
     plasma-desktop \
     plasma-x11-session \
-    python-virtualenv \
-    rsync \
-    tmux \
-    typescript \
-    vim \
-    vulkan-headers && \
-  cargo install \
-    wl-clipboard-rs-tools && \
+    rsync && \
   echo "**** install lm studio ****" && \
   cd /tmp && \
   mkdir /opt/lm-studio && \
@@ -68,45 +43,44 @@ RUN \
   cp \
     /opt/lm-studio/lm-studio.desktop \
     /usr/share/applications/ && \
-  echo "**** install npm AI tools ****" && \
-  npm install -g \
-    @lmstudio/sdk \
-    cline \
-    openclaw@latest \
-    opencode-ai \
-    opencode-lmstudio && \
-  echo "**** install pip AI tools ****" && \
-  python -m pip install \
-    aider-install \
-    lmstudio && \
-  echo "**** replace wl-clipboard with rust ****" && \
-  mv \
-    /config/.cargo/bin/wl-* \
-    /usr/bin/ && \
   echo "**** application tweaks ****" && \
-  mv \
-    /usr/bin/chromium \
-    /usr/bin/chromium-real && \
-  mv \
-    /usr/bin/code-oss \
-    /usr/bin/code-oss-real && \
   setcap -r \
     /usr/sbin/kwin_wayland && \
   echo "**** cleanup ****" && \
   rm -rf \
     /config/.cache \
-    /config/.cargo \
     /config/.config \
-    /config/.npm \
-    /config/.openclaw \
     /tmp/* \
     /var/cache/pacman/pkg/* \
     /var/lib/pacman/sync/*
 
-# add local files
-COPY /root /
+RUN \
+  printf '%s\n' \
+    '#!/bin/bash' \
+    '' \
+    'cd /opt/lm-studio' \
+    'exec ./lm-studio --no-sandbox "$@"' \
+    > /usr/bin/lm-studio && \
+  printf '%s\n' \
+    '#!/bin/bash' \
+    '' \
+    'if [ ! -f "$HOME/.lmstudio-home-pointer" ]; then' \
+    '  printf "%s" "$HOME/.lmstudio" > "$HOME/.lmstudio-home-pointer"' \
+    'fi' \
+    '' \
+    'if [ ! -f "$HOME/.lmstudio/.internal/llmster-install-location.json" ]; then' \
+    '  mkdir -p "$HOME/.lmstudio/.internal"' \
+    '  rsync -av --ignore-existing /opt/lm-studio/.lmstudio/* "$HOME/.lmstudio/"' \
+    '  cp /opt/lm-studio/.lmstudio/.internal/llmster-install-location.json "$HOME/.lmstudio/.internal/llmster-install-location.json"' \
+    '  sed -i "s:/opt/lm-studio:$HOME:g" "$HOME/.lmstudio/.internal/llmster-install-location.json"' \
+    'fi' \
+    '' \
+    'exec "$HOME/.lmstudio/bin/lms" "$@"' \
+    > /usr/bin/lms && \
+  chmod +x \
+    /usr/bin/lm-studio \
+    /usr/bin/lms
 
-# ports and volumes
 EXPOSE 3000
 
 VOLUME /config
