@@ -1,11 +1,12 @@
 FROM ghcr.io/linuxserver/baseimage-selkies:arch
 
+# set version label
 ARG BUILD_DATE
-ARG VERSION=local
-
-LABEL build_version="Local LM Studio version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+ARG VERSION
+LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
+# title
 ENV TITLE="LM Studio" \
     PIXELFLUX_WAYLAND=true \
     NO_GAMEPAD=true
@@ -15,9 +16,11 @@ RUN \
   curl -o \
     /usr/share/selkies/www/icon.png \
     https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lmstudio-logo.png && \
-  echo "**** install runtime packages ****" && \
+  echo "**** install packages ****" && \
   pacman -Sy --noconfirm --needed \
+    cuda \
     kde-cli-tools \
+    kdialog \
     konsole \
     kwin-x11 \
     plasma-desktop \
@@ -54,33 +57,10 @@ RUN \
     /var/cache/pacman/pkg/* \
     /var/lib/pacman/sync/*
 
-RUN \
-  printf '%s\n' \
-    '#!/bin/bash' \
-    '' \
-    'cd /opt/lm-studio' \
-    'exec ./lm-studio --no-sandbox "$@"' \
-    > /usr/bin/lm-studio && \
-  printf '%s\n' \
-    '#!/bin/bash' \
-    '' \
-    'if [ ! -f "$HOME/.lmstudio-home-pointer" ]; then' \
-    '  printf "%s" "$HOME/.lmstudio" > "$HOME/.lmstudio-home-pointer"' \
-    'fi' \
-    '' \
-    'if [ ! -f "$HOME/.lmstudio/.internal/llmster-install-location.json" ]; then' \
-    '  mkdir -p "$HOME/.lmstudio/.internal"' \
-    '  rsync -av --ignore-existing /opt/lm-studio/.lmstudio/* "$HOME/.lmstudio/"' \
-    '  cp /opt/lm-studio/.lmstudio/.internal/llmster-install-location.json "$HOME/.lmstudio/.internal/llmster-install-location.json"' \
-    '  sed -i "s:/opt/lm-studio:$HOME:g" "$HOME/.lmstudio/.internal/llmster-install-location.json"' \
-    'fi' \
-    '' \
-    'exec "$HOME/.lmstudio/bin/lms" "$@"' \
-    > /usr/bin/lms && \
-  chmod +x \
-    /usr/bin/lm-studio \
-    /usr/bin/lms
+# add local files
+COPY /root /
 
+# ports and volumes
 EXPOSE 3000
 
 VOLUME /config

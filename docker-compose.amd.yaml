@@ -1,0 +1,8 @@
+---
+services:
+  lm-studio:
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
+    environment:
+      - AUTO_GPU=true

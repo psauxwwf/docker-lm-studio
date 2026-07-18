@@ -1,0 +1,40 @@
+---
+x-lm-studio: &lm-studio
+  image: ${LM_STUDIO_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:latest}
+  build:
+    context: .
+    dockerfile: Dockerfile
+    platforms:
+      - linux/amd64
+    cache_from:
+      - type=registry,ref=${LM_STUDIO_CACHE_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:buildcache}
+    cache_to:
+      - type=registry,ref=${LM_STUDIO_CACHE_IMAGE:-ghcr.io/psauxwwf/docker-lm-studio:buildcache},mode=max
+  container_name: lm-studio
+  volumes:
+    - ./config:/config
+    - ./custom-services.d:/custom-services.d:ro
+  environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=Etc/UTC
+  ports:
+    - '127.0.0.1:1234:1234/tcp'
+    - '127.0.0.1:3000:3000/tcp'
+  restart: unless-stopped
+  ipc: host
+  platform: linux/amd64
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+    stack:
+      soft: 67108864
+      hard: 67108864
+    nofile:
+      soft: 1048576
+      hard: 1048576
+
+services:
+  lm-studio:
+    <<: *lm-studio

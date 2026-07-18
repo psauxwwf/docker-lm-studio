@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+dotenv: [".env"]
+
+vars:
+  DOCKER_COMPOSE: docker compose --project-directory . -f docker-compose.yaml
+  IMAGE: ghcr.io/psauxwwf/docker-lm-studio:latest
+  CACHE_IMAGE: ghcr.io/psauxwwf/docker-lm-studio:buildcache
+  SERVICE: lm-studio
+
+tasks:
+  build:
+    desc: Build the LM Studio image with registry cache.
+    silent: true
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} LM_STUDIO_CACHE_IMAGE={{.CACHE_IMAGE}} {{.DOCKER_COMPOSE}} build {{.SERVICE}}"
+
+  build:no-cache:
+    desc: Build the LM Studio image without cache.
+    silent: true
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} LM_STUDIO_CACHE_IMAGE={{.CACHE_IMAGE}} {{.DOCKER_COMPOSE}} build --no-cache {{.SERVICE}}"
+
+  push:
+    desc: Push the LM Studio image to GitHub Container Registry.
+    silent: true
+    cmds:
+      - docker push {{.IMAGE}}
+
+  prepare:
+    desc: Create local LM Studio data directories.
+    silent: true
+    cmds:
+      - mkdir -p ./config ./custom-services.d
+      - test -w ./config
+      - test -x ./custom-services.d/lms-server
+
+  up:cpu:
+    desc: Start the CPU container.
+    silent: true
+    deps:
+      - task: prepare
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} up -d {{.SERVICE}}"
+
+  up:nvidia:
+    desc: Start the NVIDIA container.
+    silent: true
+    deps:
+      - task: prepare
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.nvidia.yaml up -d {{.SERVICE}}"
+
+  up:amd:
+    desc: Start the AMD container.
+    silent: true
+    deps:
+      - task: prepare
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.amd.yaml up -d {{.SERVICE}}"
+
+  up:intel:
+    desc: Start the Intel container.
+    silent: true
+    deps:
+      - task: prepare
+    cmds:
+      - "LM_STUDIO_IMAGE={{.IMAGE}} {{.DOCKER_COMPOSE}} -f docker-compose.intel.yaml up -d {{.SERVICE}}"
+
+  down:
+    desc: Stop and remove the LM Studio container.
+    silent: true
+    cmds:
+      - "{{.DOCKER_COMPOSE}} down"
+
+  logs:
+    desc: Follow LM Studio container logs.
+    silent: true
+    cmds:
+      - "{{.DOCKER_COMPOSE}} logs -f {{.SERVICE}}"
