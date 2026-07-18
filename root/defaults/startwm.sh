@@ -5,8 +5,6 @@ if [ ! -f $HOME/Desktop/lm-studio.desktop ]; then
   mkdir -p $HOME/Desktop
   cp /usr/share/applications/lm-studio.desktop $HOME/Desktop/
   chmod +x $HOME/Desktop/lm-studio.desktop
-  cp /defaults/lms.desktop $HOME/Desktop/
-  chmod +x $HOME/Desktop/lms.desktop
 fi
 
 # Disable compositing and screen locking

@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-s6-setuidgid abc lms server start --bind 0.0.0.0
-exec sleep infinity

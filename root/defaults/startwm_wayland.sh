@@ -6,16 +6,6 @@ if [ ! -f $HOME/Desktop/lm-studio.desktop ]; then
   mkdir -p $HOME/Desktop
   cp /usr/share/applications/lm-studio.desktop $HOME/Desktop/
   chmod +x $HOME/Desktop/lm-studio.desktop
-  cp /defaults/lms.desktop $HOME/Desktop/
-  chmod +x $HOME/Desktop/lms.desktop
-  cp /usr/share/applications/org.kde.konsole.desktop $HOME/Desktop/
-  chmod +x $HOME/Desktop/org.kde.konsole.desktop
-fi
-
-# Default configs
-if [ ! -f $HOME/.config/opencode/opencode.json ]; then
-  mkdir -p "$HOME/.config/opencode"
-  cp /defaults/opencode.json "$HOME/.config/opencode/"
 fi
 
 # Disable compositing and screen locking

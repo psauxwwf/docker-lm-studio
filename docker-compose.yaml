@@ -6,6 +6,9 @@ x-lm-studio: &lm-studio
     dockerfile: Dockerfile
     args:
       VERSION: ${LM_STUDIO_VERSION:-local}
+      INSTALL_LMSTUDIO_RUNTIME_PACKAGES: ${INSTALL_LMSTUDIO_RUNTIME_PACKAGES:-false}
+      INSTALL_OPTIONAL_HELPER_PACKAGES: ${INSTALL_OPTIONAL_HELPER_PACKAGES:-true}
+      INSTALL_X11_FALLBACK_PACKAGES: ${INSTALL_X11_FALLBACK_PACKAGES:-false}
     platforms:
       - linux/amd64
     cache_from:
@@ -15,14 +18,16 @@ x-lm-studio: &lm-studio
   container_name: lm-studio
   volumes:
     - ./config:/config
-    - ./custom-services.d:/custom-services.d:ro
   environment:
     - PUID=1000
     - PGID=1000
     - TZ=Etc/UTC
+    - LMS_UPDATE=${LMS_UPDATE-true}
   ports:
     - '127.0.0.1:1234:1234/tcp'
     - '127.0.0.1:3000:3000/tcp'
+  networks:
+    - lm-studio
   restart: unless-stopped
   ipc: host
   platform: linux/amd64
@@ -40,3 +45,8 @@ x-lm-studio: &lm-studio
 services:
   lm-studio:
     <<: *lm-studio
+
+networks:
+  lm-studio:
+    name: lm-studio
+    driver: bridge
