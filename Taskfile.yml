@@ -55,18 +55,6 @@ tasks:
       - >-
         gh release create "v{{.VERSION}}" --target "$(git rev-parse HEAD)" --title "v{{.VERSION}}" --generate-notes
 
-  build:
-    desc: Build the LM Studio Docker image.
-    silent: true
-    cmds:
-      - task: image:build
-
-  push:
-    desc: Push the LM Studio image to GitHub Container Registry.
-    silent: true
-    cmds:
-      - task: image:push
-
   up:cpu:
     desc: Start the CPU container.
     silent: true

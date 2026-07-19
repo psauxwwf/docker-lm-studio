@@ -1,2 +1,4 @@
 /config
 /.git
+/.github
+/docker-lm-studio.tar.gz

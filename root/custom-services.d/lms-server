@@ -3,42 +3,42 @@
 SERVER_URL="http://127.0.0.1:1234/v1/models"
 
 wait_for_server() {
-  echo "Waiting for server to be ready..."
+	echo "Waiting for server to be ready..."
 
-  for _ in {1..30}; do
-    if curl -fsS "$SERVER_URL" >/dev/null 2>&1; then
-      echo "Server is ready"
-      return 0
-    fi
+	for _ in {1..30}; do
+		if curl -fsS "$SERVER_URL" > /dev/null 2>&1; then
+			echo "Server is ready"
+			return 0
+		fi
 
-    sleep 1
-  done
+		sleep 1
+	done
 
-  echo "Server did not become ready in 30s"
-  return 1
+	echo "Server did not become ready in 30s"
+	return 1
 }
 
 update_runtimes() {
-  echo "Refreshing runtime catalog..."
-  s6-setuidgid abc lms runtime get --list --allow-incompatible >/dev/null 2>&1 || true
+	echo "Refreshing runtime catalog..."
+	s6-setuidgid abc lms runtime get --list --allow-incompatible > /dev/null 2>&1 || true
 
-  echo "Updating installed runtimes..."
-  s6-setuidgid abc lms runtime update --all --yes --allow-incompatible
+	echo "Updating installed runtimes..."
+	s6-setuidgid abc lms runtime update --all --yes --allow-incompatible
 }
 
 s6-setuidgid abc lms server start --bind 0.0.0.0
 
 case "${LMS_UPDATE:-}" in
-true | yes | 1)
-  if wait_for_server; then
-    update_runtimes || echo "Runtime update failed, continuing startup"
-  else
-    echo "Server is not ready, skipping runtime update"
-  fi
-  ;;
-*)
-  echo "LMS_UPDATE is empty, skipping runtime update"
-  ;;
+	true | yes | 1)
+		if wait_for_server; then
+			update_runtimes || echo "Runtime update failed, continuing startup"
+		else
+			echo "Server is not ready, skipping runtime update"
+		fi
+		;;
+	*)
+		echo "LMS_UPDATE is empty, skipping runtime update"
+		;;
 esac
 
 exec sleep infinity
